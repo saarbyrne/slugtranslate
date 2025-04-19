@@ -39,15 +39,18 @@ export default function Overlay({ selection }: Props) {
     document.getElementById('translate-overlay')?.remove();
   };
 
+  // Auto-translate on mount
+  useEffect(() => {
+    translateText();
+  }, []); // run once
+
   // Keyboard shortcuts: Escape to close, Option+D to translate
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      // ESC to close
       if (e.key === 'Escape') {
         e.preventDefault();
         closeOverlay();
       }
-      // Option (Alt) + D to translate
       if (e.altKey && e.code === 'KeyD') {
         e.preventDefault();
         translateText();
@@ -68,7 +71,9 @@ export default function Overlay({ selection }: Props) {
         type="button"
         className="translate-close-btn"
         onClick={closeOverlay}
-      >×</button>
+      >
+        ×
+      </button>
 
       <div className="header">🔤 Traductor</div>
 
@@ -83,6 +88,7 @@ export default function Overlay({ selection }: Props) {
       <label>Texto original</label>
       <textarea readOnly value={original} />
 
+      {/* optional manual re-translate button */}
       <button
         type="button"
         onClick={translateText}

@@ -1,9 +1,26 @@
-console.log('🚀 [Translator] content script injected');
+// Confirm injection
+console.log('🚀 [SlugTranslate] content script injected');
+
 import { render } from 'preact';
 import Overlay from './overlay/Overlay';
 import './overlay/styles.css';
 
-// —— 1) Create a single floating “T” button ——
+// —— Utility: show the overlay for a given Selection ——
+function showOverlay(sel: Selection) {
+  console.log('▶️ showOverlay called with selection:', sel.toString());
+
+  // Remove any existing overlay
+  const old = document.getElementById('translate-overlay');
+  if (old) old.remove();
+
+  // Create container and mount your Preact component
+  const container = document.createElement('div');
+  container.id = 'translate-overlay';
+  document.body.appendChild(container);
+  render(<Overlay selection={sel} />, container);
+}
+
+// —— 1) Floating “T” button ——
 const translateBtn = document.createElement('button');
 translateBtn.id = 'translate-selection-btn';
 translateBtn.type = 'button';
@@ -12,11 +29,11 @@ translateBtn.className = 'translate-btn';
 Object.assign(translateBtn.style, {
   position: 'absolute',
   display: 'none',
-  zIndex: '2147483647',
+  zIndex: '2147483647'
 });
 document.body.appendChild(translateBtn);
 
-// —— 2) Show/hide & position on selection change ——
+// —— 2) Show/hide & position on text selection ——
 document.addEventListener('selectionchange', () => {
   const sel = window.getSelection();
   if (!sel || sel.isCollapsed || !sel.toString().trim()) {
@@ -24,57 +41,46 @@ document.addEventListener('selectionchange', () => {
     return;
   }
 
-  // Get the last client rect of the selection for positioning
+  // Compute position at end of selection
   const range = sel.getRangeAt(0);
   const rects = Array.from(range.getClientRects());
-  const rect = rects.length ? rects[rects.length - 1] : range.getBoundingClientRect();
+  const rect = rects.length
+    ? rects[rects.length - 1]
+    : range.getBoundingClientRect();
 
   translateBtn.style.top = `${window.scrollY + rect.bottom + 5}px`;
   translateBtn.style.left = `${window.scrollX + rect.right + 5}px`;
   translateBtn.style.display = 'block';
 
-  // Save the current selection for the click handler
+  // Store the Selection for later
   (translateBtn as any)._selection = sel;
 });
 
-// —— 3) Click on “T” opens the overlay ——
-translateBtn.addEventListener('click', e => {
+// —— 3) Mousedown on “T” to open overlay (preserves selection) ——
+translateBtn.addEventListener('mousedown', e => {
   e.preventDefault();
   e.stopPropagation();
-  const sel = (translateBtn as any)._selection as Selection;
-  if (!sel || !sel.toString().trim()) return;
-
-  // Remove any existing overlay
-  document.getElementById('translate-overlay')?.remove();
-
-  // Render the overlay with the saved selection
-  const container = document.createElement('div');
-  container.id = 'translate-overlay';
-  document.body.appendChild(container);
-  render(<Overlay selection={sel} />, container);
-
-  // Hide the button until next selection
-  translateBtn.style.display = 'none';
+  const sel = window.getSelection();
+  if (sel && !sel.isCollapsed && sel.toString().trim()) {
+    showOverlay(sel);
+    translateBtn.style.display = 'none';
+  }
 });
 
-// Capture-phase listener so we get the event before the page does
-window.addEventListener('keydown', (e) => {
-  console.log('🔑 [capture] keydown', e.code, 'alt=', e.altKey);
-  if (e.altKey && e.code === 'KeyA') {
-    const sel = window.getSelection();
-    if (sel && !sel.isCollapsed && sel.toString().trim()) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      // Tear down & re-render the overlay
-      document.getElementById('translate-overlay')?.remove();
-      const container = document.createElement('div');
-      container.id = 'translate-overlay';
-      document.body.appendChild(container);
-      render(<Overlay selection={sel} />, container);
-
-      // Hide the “T” button
-      translateBtn.style.display = 'none';
+// —— 4) Option+A keyboard shortcut to open overlay (capture phase) ——
+window.addEventListener(
+  'keydown',
+  e => {
+    console.log('🔑 [capture] keydown', { code: e.code, alt: e.altKey });
+    if (e.altKey && e.code === 'KeyA') {
+      const sel = window.getSelection();
+      if (sel && !sel.isCollapsed && sel.toString().trim()) {
+        e.preventDefault();
+        e.stopPropagation();
+        showOverlay(sel);
+        translateBtn.style.display = 'none';
+      }
     }
-  }
-}, /* capture */ true);
+  },
+  /* capture */ true
+);
