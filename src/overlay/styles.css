@@ -39,3 +39,34 @@
 .overlay button:hover {
   background: #0056b3;
 }
+
+.translate-overlay {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 12px;
+  border-radius: 6px;
+  z-index: 2147483647;
+}
+
+.translate-overlay .header {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.translate-overlay .body label {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.9em;
+}
+
+.translate-overlay .body textarea {
+  width: 100%;
+  height: 60px;
+  margin-top: 4px;
+  resize: vertical;
+}
