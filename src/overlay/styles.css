@@ -1,87 +1,99 @@
-/* Base font */
-.translate-overlay,
-.translate-overlay * {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-}
-
-/* Floating translate panel */
+/* Panel container */
 .translate-overlay {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 300px;
-  background: #ffffff;      /* white background */
-  padding: 16px;
-  border-radius: 8px;       /* soft corners */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   z-index: 2147483647;
+}
+
+/* Close “×” button */
+.translate-close-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  font-size: 1.2em;
+  line-height: 1;
+  color: #666;
+  cursor: pointer;
+}
+.translate-close-btn:hover {
+  color: #000;
 }
 
 /* Header */
 .translate-overlay .header {
-  font-size: 1.1em;
-  font-weight: 600;
-  margin-bottom: 12px;
+  margin: 0;
+  font-size: 1em;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Single language switcher */
+.lang-switcher {
+  display: block;
+  margin: 8px auto;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.9em;
+  color: #333;
+  cursor: pointer;
+}
+.lang-switcher:hover {
+  background: #f5f5f5;
 }
 
 /* Body labels */
-.translate-overlay .body label {
+.translate-overlay label {
   display: block;
-  margin-top: 12px;
-  margin-bottom: 4px;
-  font-size: 0.9em;
-  color: #444;
+  margin-top: 10px;
+  font-size: 0.85em;
+  color: #555;
 }
 
 /* Textareas */
-.translate-overlay .body textarea {
+.translate-overlay textarea {
   width: 100%;
-  height: 60px;
-  padding: 8px;
-  border: none;             /* remove border */
-  background: #f9f9f9;      /* light grey background */
+  height: 50px;
+  margin-top: 4px;
+  padding: 4px 6px;
+  font-size: 0.9em;
+  border: 1px solid #ccc;
   border-radius: 4px;
+  background: #fafafa;
   resize: vertical;
-  font-size: 0.95em;
-  color: #222;
 }
 
-/* Buttons */
-.translate-overlay button {
-  margin-top: 12px;
-  padding: 10px;
-  width: 100%;
-  background: #007bff;      /* blue fill */
-  color: #fff;
-  font-size: 1em;
-  font-weight: 500;
-  border: none;             /* remove border */
+/* Action buttons (translate & insert) */
+.translate-overlay .body button {
+  display: block;
+  width: auto;
+  margin: 10px 0 0;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 0.9em;
+  color: #333;
   cursor: pointer;
-  transition: background 0.2s;
 }
-.translate-overlay button:disabled {
-  background: #aac8f5;
-  cursor: not-allowed;
+.translate-overlay .body button:disabled {
+  color: #aaa;
+  border-color: #eee;
+  cursor: default;
 }
-.translate-overlay button:not(:disabled):hover {
-  background: #0056b3;
-}
-
-/* Optional: mask version if you ever use a full‑screen backdrop */
-.translate-mask {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2147483646;
-}
-.translate-mask-content {
-  background: #fff;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+.translate-overlay .body button:not(:disabled):hover {
+  background: #f5f5f5;
 }
