@@ -1,0 +1,21 @@
+{
+  "name": "languagekeyboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && cp manifest.json dist/ && cp -r public dist/ && cp -r src/overlay dist/overlay",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.8.1",
+    "@types/chrome": "^0.0.315",
+    "@types/node": "^22.14.1",
+    "typescript": "~5.7.2",
+    "vite": "^6.3.1"
+  },
+  "dependencies": {
+    "preact": "^10.26.5"
+  }
+}
