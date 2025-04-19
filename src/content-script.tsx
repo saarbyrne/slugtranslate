@@ -1,8 +1,9 @@
+console.log('🚀 [Translator] content script injected');
 import { render } from 'preact';
 import Overlay from './overlay/Overlay';
 import './overlay/styles.css';
 
-// Create one floating “T” button, hidden by default
+// —— 1) Create a single floating “T” button ——
 const translateBtn = document.createElement('button');
 translateBtn.id = 'translate-selection-btn';
 translateBtn.type = 'button';
@@ -15,7 +16,7 @@ Object.assign(translateBtn.style, {
 });
 document.body.appendChild(translateBtn);
 
-// Whenever you change selection, show or hide & reposition the button
+// —— 2) Show/hide & position on selection change ——
 document.addEventListener('selectionchange', () => {
   const sel = window.getSelection();
   if (!sel || sel.isCollapsed || !sel.toString().trim()) {
@@ -23,20 +24,20 @@ document.addEventListener('selectionchange', () => {
     return;
   }
 
+  // Get the last client rect of the selection for positioning
   const range = sel.getRangeAt(0);
   const rects = Array.from(range.getClientRects());
   const rect = rects.length ? rects[rects.length - 1] : range.getBoundingClientRect();
 
-  // Position just below and to the right of the selection
   translateBtn.style.top = `${window.scrollY + rect.bottom + 5}px`;
   translateBtn.style.left = `${window.scrollX + rect.right + 5}px`;
   translateBtn.style.display = 'block';
 
-  // Save this selection for the click handler
+  // Save the current selection for the click handler
   (translateBtn as any)._selection = sel;
 });
 
-// On click, mount the overlay with that selection
+// —— 3) Click on “T” opens the overlay ——
 translateBtn.addEventListener('click', e => {
   e.preventDefault();
   e.stopPropagation();
@@ -46,7 +47,7 @@ translateBtn.addEventListener('click', e => {
   // Remove any existing overlay
   document.getElementById('translate-overlay')?.remove();
 
-  // Create and render the Overlay, passing the selection
+  // Render the overlay with the saved selection
   const container = document.createElement('div');
   container.id = 'translate-overlay';
   document.body.appendChild(container);
@@ -56,4 +57,24 @@ translateBtn.addEventListener('click', e => {
   translateBtn.style.display = 'none';
 });
 
-console.log('✅ Content script (selection version) loaded');
+// Capture-phase listener so we get the event before the page does
+window.addEventListener('keydown', (e) => {
+  console.log('🔑 [capture] keydown', e.code, 'alt=', e.altKey);
+  if (e.altKey && e.code === 'KeyA') {
+    const sel = window.getSelection();
+    if (sel && !sel.isCollapsed && sel.toString().trim()) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Tear down & re-render the overlay
+      document.getElementById('translate-overlay')?.remove();
+      const container = document.createElement('div');
+      container.id = 'translate-overlay';
+      document.body.appendChild(container);
+      render(<Overlay selection={sel} />, container);
+
+      // Hide the “T” button
+      translateBtn.style.display = 'none';
+    }
+  }
+}, /* capture */ true);

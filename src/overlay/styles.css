@@ -1,111 +1,87 @@
-/* Backdrop behind the translate panel */
-.translate-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2147483646; /* just under the panel */
+/* Base font */
+.translate-overlay,
+.translate-overlay * {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-/* Inner panel content */
-.translate-mask-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Textareas inside the mask (if you use them) */
-.translate-mask-content textarea {
-  width: 300px;
-  height: 150px;
-  margin-bottom: 10px;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: inherit;
-}
-
-/* Buttons inside the mask */
-.translate-mask-content button {
-  padding: 8px 16px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: inherit;
-}
-.translate-mask-content button:hover {
-  background: #0056b3;
-}
-
-/* Floating translate panel (bottom‑right) */
+/* Floating translate panel */
 .translate-overlay {
   position: fixed;
   bottom: 20px;
   right: 20px;
   width: 300px;
-  background: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  padding: 12px;
-  border-radius: 6px;
-  z-index: 2147483647; /* above everything */
+  background: #ffffff;      /* white background */
+  padding: 16px;
+  border-radius: 8px;       /* soft corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 2147483647;
 }
+
+/* Header */
 .translate-overlay .header {
-  font-weight: bold;
-  margin-bottom: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
+
+/* Body labels */
 .translate-overlay .body label {
   display: block;
-  margin-top: 8px;
+  margin-top: 12px;
+  margin-bottom: 4px;
   font-size: 0.9em;
+  color: #444;
 }
+
+/* Textareas */
 .translate-overlay .body textarea {
   width: 100%;
   height: 60px;
-  margin-top: 4px;
-  resize: vertical;
-  font-family: inherit;
-}
-
-/* Wrapper for inputs when you choose “above” or “side” placement */
-.translate-wrapper {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 1.5em; /* gives space if button is above */
-}
-
-/* Button above the input */
-.translate-wrapper.top .translate-btn {
-  position: absolute;
-  top: 0;      /* just above the input */
-  left: 50%;
-  transform: translate(-50%, -100%);
-}
-
-/* Button to the right of the input */
-.translate-wrapper.side .translate-btn {
-  position: absolute;
-  top: 50%;
-  right: -2.5em; /* adjust to taste */
-  transform: translateY(-50%);
-}
-
-/* The actual “T” button */
-.translate-btn {
-  padding: 2px 6px;
-  font-size: 0.9em;
-  border: 1px solid #888;
-  background: #f0f0f0;
-  cursor: pointer;
+  padding: 8px;
+  border: none;             /* remove border */
+  background: #f9f9f9;      /* light grey background */
   border-radius: 4px;
-  font-family: inherit;
-  z-index: 2147483648; /* above wrapper/input */
+  resize: vertical;
+  font-size: 0.95em;
+  color: #222;
+}
+
+/* Buttons */
+.translate-overlay button {
+  margin-top: 12px;
+  padding: 10px;
+  width: 100%;
+  background: #007bff;      /* blue fill */
+  color: #fff;
+  font-size: 1em;
+  font-weight: 500;
+  border: none;             /* remove border */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.translate-overlay button:disabled {
+  background: #aac8f5;
+  cursor: not-allowed;
+}
+.translate-overlay button:not(:disabled):hover {
+  background: #0056b3;
+}
+
+/* Optional: mask version if you ever use a full‑screen backdrop */
+.translate-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2147483646;
+}
+.translate-mask-content {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 }
