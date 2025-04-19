@@ -3,66 +3,38 @@ import { useState } from 'preact/hooks';
 import './styles.css';
 
 interface Props {
-  target: HTMLInputElement | HTMLTextAreaElement;
+  // We now expect a Selection rather than an input element
+  selection: Selection;
 }
 
-export default function Overlay({ target }: Props) {
+export default function Overlay({ selection }: Props) {
+  const original = selection.toString();
   const [translated, setTranslated] = useState('');
   const [loading, setLoading] = useState(false);
 
   const translateText = () => {
     setLoading(true);
     chrome.runtime.sendMessage(
-      { type: 'TRANSLATE', text: target.value, targetLang: 'ES' },
+      { type: 'TRANSLATE', text: original, targetLang: 'ES' },
       (response) => {
         setLoading(false);
-        if (response.error) {
-          setTranslated('Error al traducir');
-        } else {
-          setTranslated(response.translated);
-        }
+        setTranslated(response.error ? 'Error al traducir' : response.translated);
       }
     );
   };
 
   const applyTranslation = () => {
-    console.log('🚀 Applying translation:', translated, 'to', target);
+    // Replace the selected content in‑place
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(document.createTextNode(translated));
 
-    // 1) Set the new value
-    target.value = translated;
-
-    // 2) Dispatch input & change events
-    const inputEvt = new InputEvent('input', {
-      bubbles: true,
-      cancelable: true,
-      data: translated,
-    });
-    target.dispatchEvent(inputEvt);
-    const changeEvt = new Event('change', { bubbles: true });
-    target.dispatchEvent(changeEvt);
-
-    // 3) Fallback DOM replace
-    try {
-      target.setRangeText(translated, 0, target.value.length, 'end');
-      target.dispatchEvent(inputEvt);
-    } catch (e) {
-      console.warn('⚠️ setRangeText fallback failed:', e);
-    }
-
-    // 4) Refocus and move cursor to end
-    target.focus();
-    const pos = translated.length;
-    try {
-      target.setSelectionRange(pos, pos);
-    } catch {}
-
-    // 5) Remove the overlay
+    // Clean up
     document.getElementById('translate-overlay')?.remove();
   };
 
   return (
     <div
-      id="translate-overlay"
       className="translate-overlay"
       onMouseDown={e => { e.preventDefault(); e.stopPropagation(); }}
       onClick={e => { e.preventDefault(); e.stopPropagation(); }}
@@ -70,13 +42,9 @@ export default function Overlay({ target }: Props) {
       <div className="header">🔤 Traductor</div>
       <div className="body">
         <label>Original:</label>
-        <textarea readOnly value={target.value} />
+        <textarea readOnly value={original} />
 
-        <button
-          type="button"
-          onClick={translateText}
-          disabled={loading || !target.value}
-        >
+        <button type="button" onClick={translateText} disabled={loading || !original}>
           {loading ? '…' : 'Traducir'}
         </button>
 

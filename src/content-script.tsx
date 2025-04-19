@@ -2,41 +2,58 @@ import { render } from 'preact';
 import Overlay from './overlay/Overlay';
 import './overlay/styles.css';
 
-// When the page loads, find all inputs and textareas
-const inputs = document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
-  'input, textarea'
-);
+// Create one floating “T” button, hidden by default
+const translateBtn = document.createElement('button');
+translateBtn.id = 'translate-selection-btn';
+translateBtn.type = 'button';
+translateBtn.textContent = 'T';
+translateBtn.className = 'translate-btn';
+Object.assign(translateBtn.style, {
+  position: 'absolute',
+  display: 'none',
+  zIndex: '2147483647',
+});
+document.body.appendChild(translateBtn);
 
-inputs.forEach(el => {
-  // Create the translate button
-  const btn = document.createElement('button');
-  btn.textContent = 'T';
-  btn.className = 'translate-btn';
-  btn.type = 'button'; // crucial: prevents form submission
+// Whenever you change selection, show or hide & reposition the button
+document.addEventListener('selectionchange', () => {
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed || !sel.toString().trim()) {
+    translateBtn.style.display = 'none';
+    return;
+  }
 
-  // On click, prevent any default/form behavior and show the overlay
-  btn.addEventListener('click', e => {
-    e.preventDefault();
-    e.stopPropagation();
-    showOverlay(el);
-  });
+  const range = sel.getRangeAt(0);
+  const rects = Array.from(range.getClientRects());
+  const rect = rects.length ? rects[rects.length - 1] : range.getBoundingClientRect();
 
-  // Insert right after the input/textarea
-  el.parentElement?.insertBefore(btn, el.nextSibling);
+  // Position just below and to the right of the selection
+  translateBtn.style.top = `${window.scrollY + rect.bottom + 5}px`;
+  translateBtn.style.left = `${window.scrollX + rect.right + 5}px`;
+  translateBtn.style.display = 'block';
+
+  // Save this selection for the click handler
+  (translateBtn as any)._selection = sel;
 });
 
-// Function to mount the overlay panel
-function showOverlay(target: HTMLInputElement | HTMLTextAreaElement) {
+// On click, mount the overlay with that selection
+translateBtn.addEventListener('click', e => {
+  e.preventDefault();
+  e.stopPropagation();
+  const sel = (translateBtn as any)._selection as Selection;
+  if (!sel || !sel.toString().trim()) return;
+
   // Remove any existing overlay
   document.getElementById('translate-overlay')?.remove();
 
-  // Create a container for our Preact component
+  // Create and render the Overlay, passing the selection
   const container = document.createElement('div');
   container.id = 'translate-overlay';
   document.body.appendChild(container);
+  render(<Overlay selection={sel} />, container);
 
-  // Render the overlay into that container
-  render(<Overlay target={target} />, container);
-}
+  // Hide the button until next selection
+  translateBtn.style.display = 'none';
+});
 
-console.log('✅ Content script loaded');
+console.log('✅ Content script (selection version) loaded');

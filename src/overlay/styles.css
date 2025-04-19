@@ -1,4 +1,5 @@
-.overlay {
+/* Backdrop behind the translate panel */
+.translate-mask {
   position: fixed;
   top: 0;
   left: 0;
@@ -8,38 +9,43 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000;
+  z-index: 2147483646; /* just under the panel */
 }
 
-.overlay-content {
-  background: white;
+/* Inner panel content */
+.translate-mask-content {
+  background: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.overlay textarea {
+/* Textareas inside the mask (if you use them) */
+.translate-mask-content textarea {
   width: 300px;
   height: 150px;
   margin-bottom: 10px;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-family: inherit;
 }
 
-.overlay button {
+/* Buttons inside the mask */
+.translate-mask-content button {
   padding: 8px 16px;
   background: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-family: inherit;
 }
-
-.overlay button:hover {
+.translate-mask-content button:hover {
   background: #0056b3;
 }
 
+/* Floating translate panel (bottom‑right) */
 .translate-overlay {
   position: fixed;
   bottom: 20px;
@@ -50,23 +56,56 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   padding: 12px;
   border-radius: 6px;
-  z-index: 2147483647;
+  z-index: 2147483647; /* above everything */
 }
-
 .translate-overlay .header {
   font-weight: bold;
   margin-bottom: 8px;
 }
-
 .translate-overlay .body label {
   display: block;
   margin-top: 8px;
   font-size: 0.9em;
 }
-
 .translate-overlay .body textarea {
   width: 100%;
   height: 60px;
   margin-top: 4px;
   resize: vertical;
+  font-family: inherit;
+}
+
+/* Wrapper for inputs when you choose “above” or “side” placement */
+.translate-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5em; /* gives space if button is above */
+}
+
+/* Button above the input */
+.translate-wrapper.top .translate-btn {
+  position: absolute;
+  top: 0;      /* just above the input */
+  left: 50%;
+  transform: translate(-50%, -100%);
+}
+
+/* Button to the right of the input */
+.translate-wrapper.side .translate-btn {
+  position: absolute;
+  top: 50%;
+  right: -2.5em; /* adjust to taste */
+  transform: translateY(-50%);
+}
+
+/* The actual “T” button */
+.translate-btn {
+  padding: 2px 6px;
+  font-size: 0.9em;
+  border: 1px solid #888;
+  background: #f0f0f0;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: inherit;
+  z-index: 2147483648; /* above wrapper/input */
 }

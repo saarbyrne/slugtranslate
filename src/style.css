@@ -94,3 +94,31 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* src/overlay/styles.css (o en tu CSS global) */
+
+/* Contenedor posicionado */
+.translate-wrapper {
+  position: relative;
+  display: inline-block; /* para inputs en línea */
+  margin-bottom: 1.5em;  /* espacio para el botón arriba */
+}
+
+/* Variante: botón encima */
+.translate-wrapper.top .translate-btn {
+  position: absolute;
+  top: 0;      /* justo encima del input */
+  left: 50%;
+  transform: translate(-50%, -100%);
+}
+
+/* Estilo general del botón */
+.translate-btn {
+  padding: 2px 6px;
+  font-size: 0.9em;
+  border: 1px solid #888;
+  background: #f0f0f0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
