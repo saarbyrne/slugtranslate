@@ -16,7 +16,9 @@
   ],
   "commands": {
     "open-translate": {
-      "suggested_key": { "default": "Alt+A" },
+      "suggested_key": {
+        "default": "Alt+A"
+      },
       "description": "Translate highlighted text"
     }
   },
