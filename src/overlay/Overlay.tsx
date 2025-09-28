@@ -10,7 +10,7 @@ interface Props {
 
 export default function Overlay({ selection }: Props) {
   const original = selection.toString();
-  const [isEnToEs, setIsEnToEs] = useState(true);
+  const [isEnToEs, setIsEnToEs] = useState(false);
   const sourceLang: Lang = isEnToEs ? 'en' : 'es';
   const targetLang: Lang = isEnToEs ? 'es' : 'en';
   const [translated, setTranslated] = useState('');
