@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp manifest.json dist/ && cp -r public dist/ && cp -r src/overlay dist/overlay",
+    "build": "vite build && cp manifest.json dist/ && cp -r public/* dist/ 2>/dev/null || true",
     "preview": "vite preview"
   },
   "devDependencies": {

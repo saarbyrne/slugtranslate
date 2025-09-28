@@ -5,26 +5,20 @@
   "description": "Translate selected text inline (EN⇄ES).",
   "permissions": [],
   "host_permissions": [
-    "https://libretranslate.com/*"
+    "https://api.mymemory.translated.net/*"
   ],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["contentScript.js"],
-      "css": ["overlay/styles.css"]
+      "js": ["contentScript.js"]
     }
   ],
-  "commands": {
-    "open-translate": {
-      "suggested_key": {
-        "default": "Alt+A"
-      },
-      "description": "Translate highlighted text"
-    }
+  "background": {
+    "service_worker": "background.js"
   },
   "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
   }
 }

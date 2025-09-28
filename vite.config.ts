@@ -7,6 +7,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    minify: false,
+    target: 'es2015',
     rollupOptions: {
       input: {
         contentScript: resolve(__dirname, 'src/content-script.tsx'),
@@ -15,7 +17,8 @@ export default defineConfig({
       },
       output: {
         entryFileNames: '[name].js',
-        assetFileNames: '[name].[ext]'
+        assetFileNames: '[name].[ext]',
+        format: 'es'
       }
     }
   }
