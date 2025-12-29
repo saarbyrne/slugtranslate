@@ -1,5 +1,5 @@
 # SlugTranslate - Inline English-Spanish Translation
-
+https://chromewebstore.google.com/detail/slug-translate/cdbloidgfaclhajkkmlfnnamggoledmg?hl=en-GB&utm_source=ext_sidebar
 > **Select text → Translate inline** - A Chrome extension for instant, on-page translation between English and Spanish without leaving your current tab.
 
 [![Chrome](https://img.shields.io/badge/Chrome-Extension-blue)](https://www.google.com/chrome/)
